@@ -6,6 +6,7 @@
 #include "filesystem.h"
 #include "bool.h"
 #include "math.h"
+#include "memory.h"
 
 #define TEXT_BLACK 0
 #define TEXT_BLUE 1
@@ -42,9 +43,11 @@
 
 #define VIDEO_MEMORY_ADDRESS ((char*)0xB8000)
 
+#define MAX_INPUT 256
+
 #define toggle_insert_mode() enable_terminal_cursor((insert_mode = !insert_mode))
 
-char current_terminal_input[256];
+char current_terminal_input[MAX_INPUT];
 bool insert_mode;
 unsigned short TEXT_POS = 0, LINE_POS = 0, USER_POS = 0;
 short CURSOR_OFFSET = 0;
@@ -68,6 +71,44 @@ void print(const char* message)
                 continue;
             case '\r':
                 TEXT_POS = LINE_POS;
+                *message++;
+                continue;
+            case '\t':
+                switch (TEXT_POS) {
+                    case 3994:
+                        TEXT_POS+=6;
+                        for (unsigned short i = 0; i < 3998; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 2];
+                        break;
+                    case 3996:
+                        TEXT_POS+=4;
+                        for (unsigned short i = 0; i < 3996; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 4];
+                        break;
+                    case 3998:
+                        TEXT_POS+=2;
+                        for (unsigned short i = 0; i < 3994; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 6];
+                        break;
+                    case 4000:
+                        for (unsigned short i = 0; i < 3992; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 8];
+                        break;
+                    default:
+                        TEXT_POS+=8;
+                        break;
+                    if (TEXT_POS > LINE_POS + 159)
+                        if (LINE_POS == 3840) {
+                            for (unsigned short i = 0; i < 3838; i++)
+                                VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                            for (unsigned short i = 3840; i < 4000; i+=2) {
+                                VIDEO_MEMORY_ADDRESS[i] = 0;
+                                VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                            }
+                            TEXT_POS = 3840;
+                        } else
+                            TEXT_POS = LINE_POS+=160;
+                }
                 *message++;
                 continue;
             default:
@@ -120,6 +161,44 @@ void print_colored(const char* message, const unsigned short color_code)
                 TEXT_POS = LINE_POS;
                 *message++;
                 continue;
+            case '\t':
+                switch (TEXT_POS) {
+                    case 3994:
+                        TEXT_POS+=6;
+                        for (unsigned short i = 0; i < 3998; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 2];
+                        break;
+                    case 3996:
+                        TEXT_POS+=4;
+                        for (unsigned short i = 0; i < 3996; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 4];
+                        break;
+                    case 3998:
+                        TEXT_POS+=2;
+                        for (unsigned short i = 0; i < 3994; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 6];
+                        break;
+                    case 4000:
+                        for (unsigned short i = 0; i < 3992; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 8];
+                        break;
+                    default:
+                        TEXT_POS+=8;
+                        break;
+                    if (TEXT_POS > LINE_POS + 159)
+                        if (LINE_POS == 3840) {
+                            for (unsigned short i = 0; i < 3838; i++)
+                                VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                            for (unsigned short i = 3840; i < 4000; i+=2) {
+                                VIDEO_MEMORY_ADDRESS[i] = 0;
+                                VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                            }
+                            TEXT_POS = 3840;
+                        } else
+                            TEXT_POS = LINE_POS+=160;
+                }
+                *message++;
+                continue;
             default:
                 if (TEXT_POS == 4000) {
                     for (unsigned short i = 0; i < 3998; i++)
@@ -170,6 +249,43 @@ void printchar(const char message)
         case '\r':
             TEXT_POS = LINE_POS;
             break;
+        case '\t':
+            switch (TEXT_POS) {
+                case 3994:
+                    TEXT_POS+=6;
+                    for (unsigned short i = 0; i < 3998; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 2];
+                    break;
+                case 3996:
+                    TEXT_POS+=4;
+                    for (unsigned short i = 0; i < 3996; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 4];
+                    break;
+                case 3998:
+                    TEXT_POS+=2;
+                    for (unsigned short i = 0; i < 3994; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 6];
+                    break;
+                case 4000:
+                    for (unsigned short i = 0; i < 3992; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 8];
+                    break;
+                default:
+                    TEXT_POS+=8;
+                    break;
+                if (TEXT_POS > LINE_POS + 159)
+                    if (LINE_POS == 3840) {
+                        for (unsigned short i = 0; i < 3838; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                        for (unsigned short i = 3840; i < 4000; i+=2) {
+                            VIDEO_MEMORY_ADDRESS[i] = 0;
+                            VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                        }
+                        TEXT_POS = 3840;
+                    } else
+                        TEXT_POS = LINE_POS+=160;
+            }
+            break;
         default:
             if (TEXT_POS == 4000) {
                 for (unsigned short i = 0; i < 3998; i++)
@@ -215,6 +331,43 @@ void printchar_colored(const char message, const unsigned short color_code)
             break;
         case '\r':
             TEXT_POS = LINE_POS;
+            break;
+        case '\t':
+            switch (TEXT_POS) {
+                case 3994:
+                    TEXT_POS+=6;
+                    for (unsigned short i = 0; i < 3998; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 2];
+                    break;
+                case 3996:
+                    TEXT_POS+=4;
+                    for (unsigned short i = 0; i < 3996; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 4];
+                    break;
+                case 3998:
+                    TEXT_POS+=2;
+                    for (unsigned short i = 0; i < 3994; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 6];
+                    break;
+                case 4000:
+                    for (unsigned short i = 0; i < 3992; i++)
+                        VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 8];
+                    break;
+                default:
+                    TEXT_POS+=8;
+                    break;
+                if (TEXT_POS > LINE_POS + 159)
+                    if (LINE_POS == 3840) {
+                        for (unsigned short i = 0; i < 3838; i++)
+                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                        for (unsigned short i = 3840; i < 4000; i+=2) {
+                            VIDEO_MEMORY_ADDRESS[i] = 0;
+                            VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                        }
+                        TEXT_POS = 3840;
+                    } else
+                        TEXT_POS = LINE_POS+=160;
+            }
             break;
         default:
             if (TEXT_POS == 4000) {
@@ -337,6 +490,8 @@ unsigned short get_cursor_position()
 
 void simulate_terminal_keystroke(const char key) {
     const unsigned short pos = get_cursor_position() * 2;
+    if ((pos - USER_POS) / 2 == MAX_INPUT - 1)
+        return;
     if (insert_mode == true && CURSOR_OFFSET != 0) {
         current_terminal_input[(pos - USER_POS) / 2] = key;
         VIDEO_MEMORY_ADDRESS[pos] = key;
@@ -344,7 +499,7 @@ void simulate_terminal_keystroke(const char key) {
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[256];
+        char update[MAX_INPUT];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
@@ -353,6 +508,8 @@ void simulate_terminal_keystroke(const char key) {
 
 void simulate_terminal_keystroke_colored(const char key, const unsigned short color_code) {
     const unsigned short pos = get_cursor_position() * 2;
+    if ((pos - USER_POS) / 2 == MAX_INPUT - 1)
+        return;
     if (insert_mode == true && CURSOR_OFFSET != 0) {
         current_terminal_input[(pos - USER_POS) / 2] = key;
         VIDEO_MEMORY_ADDRESS[pos] = key;
@@ -360,7 +517,7 @@ void simulate_terminal_keystroke_colored(const char key, const unsigned short co
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[256];
+        char update[MAX_INPUT];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print_colored(update, color_code);
@@ -376,7 +533,7 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[256];
+        char update[MAX_INPUT];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
@@ -387,7 +544,7 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=(CURSOR_OFFSET + 1) * 2;
-        char update[256];
+        char update[MAX_INPUT];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2 - 1);
         print(update);
@@ -425,7 +582,7 @@ bool simulate_terminal_command(const char* command) {
         execute_file(command);
         return false;
     }
-    char path[256];
+    char path[MAX_INPUT];
     copy_string(path, current_directory);
     concatenate_char_to_string(path, '/');
     concatenate_string_to_string(path, command);
@@ -440,9 +597,10 @@ bool simulate_terminal_command(const char* command) {
     return true;
 }
 
-void simulate_terminal_newline() {
-    if (simulate_terminal_command(current_terminal_input) == false)
-        return;
+void simulate_terminal_newline(bool simulate_command) {
+    if (simulate_command == true)
+        if (simulate_terminal_command(current_terminal_input) == false)
+            return;
     current_terminal_input[0] = '\0';
     CURSOR_OFFSET = 0;
     print(current_directory);
@@ -450,9 +608,10 @@ void simulate_terminal_newline() {
     USER_POS = TEXT_POS;
 }
 
-void simulate_terminal_newline_colored(const unsigned short color_code) {
-    if (simulate_terminal_command(current_terminal_input) == false)
-        return;
+void simulate_terminal_newline_colored(bool simulate_command, const unsigned short color_code) {
+    if (simulate_command == true)
+        if (simulate_terminal_command(current_terminal_input) == false)
+            return;
     current_terminal_input[0] = '\0';
     CURSOR_OFFSET = 0;
     print_colored(current_directory, color_code);

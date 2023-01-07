@@ -4,7 +4,7 @@
 
 struct memory_block {
     void* data_pointer;
-    unsigned short used;
+    unsigned short used, offset;
     struct memory_block* next;
 };
 
@@ -28,11 +28,11 @@ const void* allocate(const unsigned long size) {
         new_block.data_pointer = &data;
         current_block->next = &new_block;
         current_block = &new_block;
-        const void* address = &((char*)current_block->data_pointer)[current_block->used];
+        const void* address = &((char*)current_block->data_pointer)[current_block->used - current_block->offset];
         current_block->used+=size;
         return address;
     } else {
-        const void* address = &((char*)current_block->data_pointer)[current_block->used];
+        const void* address = &((char*)current_block->data_pointer)[current_block->used - current_block->offset];
         current_block->used+=size;
         return address;
     }
@@ -45,7 +45,8 @@ const void* reallocate(const void* address, const unsigned long old_size, const 
     for (struct memory_block* block = first_block; block; block = block->next)
         if ((unsigned int)address >= (unsigned int)block->data_pointer && (unsigned int)address <= (unsigned int)block->data_pointer + MEMORY_BLOCK_DATA_SIZE)
             if (new_size - old_size + block->used > MEMORY_BLOCK_DATA_SIZE) {
-                current_block->used = MEMORY_BLOCK_DATA_SIZE - old_size;
+                block->used = MEMORY_BLOCK_DATA_SIZE - old_size;
+                block->offset = MEMORY_BLOCK_DATA_SIZE - ((unsigned int)address - (unsigned int)block->data_pointer);
                 static struct memory_block new_block;
                 static char data[MEMORY_BLOCK_DATA_SIZE];
                 new_block.data_pointer = &data;
@@ -55,11 +56,12 @@ const void* reallocate(const void* address, const unsigned long old_size, const 
                 current_block->used+=new_size;
                 return address;
             } else {
+                return address;
                 for (unsigned int i = (unsigned int)address - (unsigned int)block->data_pointer + old_size; i < block->used; i++) {
-                    ((char*)current_block->data_pointer)[i + new_size - old_size] = ((char*)current_block->data_pointer)[i];
-                    ((char*)current_block->data_pointer)[i] = '\0';
+                    ((char*)block->data_pointer)[i + new_size - old_size] = ((char*)block->data_pointer)[i];
+                    ((char*)block->data_pointer)[i] = '\0';
                 }
-                current_block->used+=new_size - old_size;
+                block->used+=new_size - old_size;
                 return address;
             }
     return 0;

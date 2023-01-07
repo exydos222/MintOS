@@ -79,76 +79,76 @@ void isr_handler(const struct registers registers)
 
     switch (registers.interrupt_id) {
         case DIVISION_BY_ZERO:
-            warn("DIVISION BY ZERO EXCEPTION\n");
+            warn("DIVISION BY ZERO EXCEPTION");
             break;
         case DEBUG:
-            notify("DEBUG EXCEPTION\n");
+            notify("DEBUG EXCEPTION");
             break;
         case BREAKPOINT:
-            notify("BREAKPOINT EXCEPTION\n");
+            notify("BREAKPOINT EXCEPTION");
             break;
         case INTO_DETECTED_OVERFLOW:
-            notify("INFO DETECTED OVERFLOW EXCEPTION\n");
+            notify("INFO DETECTED OVERFLOW EXCEPTION");
             break;
         case OUT_OF_BOUNDS:
-            warn("OUT OF BOUNDS EXCEPTION\n");
+            warn("OUT OF BOUNDS EXCEPTION");
             break;
         case INVALID_OPCODE:
-            warn("INVALID OPCODE EXCEPTION\n");
+            warn("INVALID OPCODE EXCEPTION");
             break;
         case NO_COPROCESSOR:
-            warn("NO COPROCESSOR EXCEPTION\n");
+            warn("NO COPROCESSOR EXCEPTION");
             break;
         case DOUBLE_FAULT:
-            error_coded("DOUBLE FAULT EXCEPTION\n", registers.error_code);
+            error_coded("DOUBLE FAULT EXCEPTION", registers.error_code);
             break;
         case COPROCESSOR_SEGMENT_OVERRUN:
-            warn("COPROCESSOR SEGMENT OVERRUN EXCEPTION\n");
+            warn("COPROCESSOR SEGMENT OVERRUN EXCEPTION");
             break;
         case INVALID_TSS:
-            warn_coded("INVALID TSS EXCEPTION\n", registers.error_code);
+            warn_coded("INVALID TSS EXCEPTION", registers.error_code);
             break;
         case SEGMENT_NOT_PRESENT:
-            warn_coded("SEGMENT NOT PRESENT EXCEPTION\n", registers.error_code);
+            warn_coded("SEGMENT NOT PRESENT EXCEPTION", registers.error_code);
             break;
         case STACK_FAULT:
-            warn_coded("STACK FAULT EXCEPTION\n", registers.error_code);
+            warn_coded("STACK FAULT EXCEPTION", registers.error_code);
             break;
         case GENERAL_PROTECTION_FAULT:
-            warn_coded("GENERAL PROTECTION FAULT EXCEPTION\n", registers.error_code);
+            warn_coded("GENERAL PROTECTION FAULT EXCEPTION", registers.error_code);
             break;
         case PAGE_FAULT:
-            warn_coded("PAGE FAULT EXCEPTION\n", registers.error_code);
+            warn_coded("PAGE FAULT EXCEPTION", registers.error_code);
             break;
         case FLOATING_POINT:
-            warn("FLOATING POINT EXCEPTION\n");
+            warn("FLOATING POINT EXCEPTION");
             break;
         case ALIGNMENT_CHECK:
-            warn_coded("ALIGNMENT CHECK EXCEPTION\n", registers.error_code);
+            warn_coded("ALIGNMENT CHECK EXCEPTION", registers.error_code);
             break;
         case MACHINE_CHECK:
-            error("MACHINE CHECK EXCEPTION\n");
+            error("MACHINE CHECK EXCEPTION");
             break;
         case SIMD_FLOATING_POINT:
-            warn("SIMD FLOATING POINT EXCEPTION\n");
+            warn("SIMD FLOATING POINT EXCEPTION");
             break;
         case VIRTUALIZATION:
-            warn("VIRTUALIZATION EXCEPTION\n");
+            warn("VIRTUALIZATION EXCEPTION");
             break;
         case CONTROL_PROTECTION:
-            warn_coded("CONTROL PROTECTION EXCEPTION\n", registers.error_code);
+            warn_coded("CONTROL PROTECTION EXCEPTION", registers.error_code);
             break;
         case HYPERVISOR:
-            warn("HYPERVISOR EXCEPTION\n");
+            warn("HYPERVISOR EXCEPTION");
             break;
         case COMMUNICATION:
-            warn_coded("COMMUNICATION EXCEPTION\n", registers.error_code);
+            warn_coded("COMMUNICATION EXCEPTION", registers.error_code);
             break;
         case SECURITY:
-            warn_coded("SECURITY EXCEPTION\n", registers.error_code);
+            warn_coded("SECURITY EXCEPTION", registers.error_code);
             break;
         default:
-            warn("UNDOCUMENTED EXCEPTION OCCURED\n");
+            warn("UNDOCUMENTED EXCEPTION OCCURED");
             break;
     }
 }

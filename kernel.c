@@ -13,7 +13,7 @@ void kernel_main()
 	setup_idt();
 	remap_pic();
 	setup_keyboard();
-
+	
 	clear_screen_whole();
 	print_colored("MintOS Kernel Terminal\n\n>", TEXT_LIGHT_GREEN);
 	USER_POS = TEXT_POS;

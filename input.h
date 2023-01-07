@@ -179,7 +179,7 @@ void internal_keyboard_manager()
                     simulate_terminal_keystroke(']');
                 break;
             case 28:
-                simulate_terminal_newline_colored(TEXT_LIGHT_GREEN);
+                simulate_terminal_newline_colored(true, TEXT_LIGHT_GREEN);
                 break;
 			case 29:
 				ctrl_down = true;
