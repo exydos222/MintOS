@@ -40,6 +40,8 @@ const void* allocate(const unsigned long size) {
 }
 
 const void* reallocate(const void* address, const unsigned long old_size, const unsigned long new_size) {
+    if (old_size >= new_size)
+        return address;
     for (struct memory_block* block = first_block; block; block = block->next)
         if ((unsigned int)address >= (unsigned int)block->data_pointer && (unsigned int)address <= (unsigned int)block->data_pointer + MEMORY_BLOCK_DATA_SIZE)
             if (new_size - old_size + block->used > MEMORY_BLOCK_DATA_SIZE) {
@@ -61,8 +63,4 @@ const void* reallocate(const void* address, const unsigned long old_size, const 
                 return address;
             }
     return 0;
-}
-
-void deallocate(const void* address, unsigned long size) {
-    
 }

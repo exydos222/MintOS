@@ -1,9 +1,8 @@
 #pragma once
 
 #include "bool.h"
-#include "memory.h"
 
-char* current_directory;
+char current_directory[256];
 
 bool file_exists(const char* path) {
     return false;

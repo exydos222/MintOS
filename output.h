@@ -6,7 +6,6 @@
 #include "filesystem.h"
 #include "bool.h"
 #include "math.h"
-#include "memory.h"
 
 #define TEXT_BLACK 0
 #define TEXT_BLUE 1
@@ -45,7 +44,7 @@
 
 #define toggle_insert_mode() enable_terminal_cursor((insert_mode = !insert_mode))
 
-char* current_terminal_input;
+char current_terminal_input[256];
 bool insert_mode;
 unsigned short TEXT_POS = 0, LINE_POS = 0, USER_POS = 0;
 short CURSOR_OFFSET = 0;
@@ -345,11 +344,10 @@ void simulate_terminal_keystroke(const char key) {
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char* update = (char*)allocate(256);
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
-        deallocate(update);
     }
 }
 
@@ -362,11 +360,10 @@ void simulate_terminal_keystroke_colored(const char key, const unsigned short co
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char* update = (char*)allocate(256);
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print_colored(update, color_code);
-        deallocate(update);
     }
 }
 
@@ -379,11 +376,10 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char* update = (char*)allocate(256);
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
-        deallocate(update);
     } else if (TEXT_POS - (CURSOR_OFFSET * 2) > USER_POS) {
         VIDEO_MEMORY_ADDRESS[pos - 2] = 0;
         VIDEO_MEMORY_ADDRESS[pos - 1] = 7;
@@ -391,11 +387,10 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=(CURSOR_OFFSET + 1) * 2;
-        char* update = (char*)allocate(256);
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2 - 1);
         print(update);
-        deallocate(update);
     }
 }
 
@@ -430,7 +425,7 @@ bool simulate_terminal_command(const char* command) {
         execute_file(command);
         return false;
     }
-    char* path = (char*)allocate(string_length(current_directory) + string_length(command) + 1);
+    char path[256];
     copy_string(path, current_directory);
     concatenate_char_to_string(path, '/');
     concatenate_string_to_string(path, command);
@@ -438,7 +433,6 @@ bool simulate_terminal_command(const char* command) {
         execute_file(path);
         return false;
     }
-    deallocate(path);
 
     print_colored("\nUnknown command \'", TEXT_LIGHT_GREEN);
     print_colored(command, TEXT_LIGHT_GREEN);
