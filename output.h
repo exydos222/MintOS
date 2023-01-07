@@ -344,7 +344,7 @@ void simulate_terminal_keystroke(const char key) {
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[128];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
@@ -360,7 +360,7 @@ void simulate_terminal_keystroke_colored(const char key, const unsigned short co
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[128];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print_colored(update, color_code);
@@ -376,7 +376,7 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[128];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
@@ -387,7 +387,7 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=(CURSOR_OFFSET + 1) * 2;
-        char update[128];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2 - 1);
         print(update);
@@ -461,6 +461,6 @@ void simulate_terminal_autocomplete() {
 
 }
 
-void simulate_terminal_autocomplete_colored() {
+void simulate_terminal_autocomplete_colored(unsigned short color_code) {
     
 }

@@ -3,9 +3,11 @@
 #include "pic.h"
 #include "gdt.h"
 #include "idt.h"
+#include "memory.h"
 
 void kernel_main()
 {
+	setup_heap();
 	current_directory[0] = '\0';
 	setup_gdt();
 	setup_idt();
