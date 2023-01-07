@@ -7,7 +7,7 @@
 
 void kernel_main()
 {
-	setup_heap();
+	setup_allocator();
 	current_directory[0] = '\0';
 	setup_gdt();
 	setup_idt();
@@ -17,4 +17,6 @@ void kernel_main()
 	clear_screen_whole();
 	print_colored("MintOS Kernel Terminal\n\n>", TEXT_LIGHT_GREEN);
 	USER_POS = TEXT_POS;
+
+	//print(to_string((unsigned int)allocate(1000)));
 }
