@@ -2,6 +2,7 @@
 
 #include "pic.h"
 #include "errors.h"
+#include "memory.h"
 
 #define IRQ0 32
 #define IRQ1 33
@@ -56,21 +57,25 @@ struct registers
 typedef void (*hook_function)(struct registers);
 struct interrupt_handler {
     unsigned char count;
-    hook_function hooks[256];
+    hook_function* hooks;
 };
-struct interrupt_handler interrupt_handlers[256];
+struct interrupt_handler interrupt_callbacks[256];
 
 void register_interrupt_hook(const unsigned char interrupt, const hook_function hook)
 {
-    interrupt_handlers[interrupt].hooks[interrupt_handlers[interrupt].count] = hook;
-    interrupt_handlers[interrupt].count++;
+    if (interrupt_callbacks[interrupt].count == 0)
+        interrupt_callbacks[interrupt].hooks = (hook_function*)allocate(sizeof(hook_function));
+    else
+        interrupt_callbacks[interrupt].hooks = (hook_function*)reallocate(interrupt_callbacks[interrupt].hooks, interrupt_callbacks[interrupt].count * sizeof(hook_function), (interrupt_callbacks[interrupt].count + 1) * sizeof(hook_function));
+    interrupt_callbacks[interrupt].hooks[interrupt_callbacks[interrupt].count] = hook;
+    interrupt_callbacks[interrupt].count++;
 }
 
 void isr_handler(const struct registers registers)
 {
-    for (unsigned char i = 0; i < interrupt_handlers[registers.interrupt_id].count; i++)
-        if (interrupt_handlers[registers.interrupt_id].hooks)
-            interrupt_handlers[registers.interrupt_id].hooks[i](registers);
+    for (unsigned char i = 0; i < interrupt_callbacks[registers.interrupt_id].count; i++)
+        if (interrupt_callbacks[registers.interrupt_id].hooks)
+            interrupt_callbacks[registers.interrupt_id].hooks[i](registers);
 
     switch (registers.interrupt_id) {
         case DIVISION_BY_ZERO:
@@ -150,9 +155,8 @@ void isr_handler(const struct registers registers)
 
 void irq_handler(const struct registers registers)
 {
-    for (unsigned char i = 0; i < interrupt_handlers[registers.interrupt_id].count; i++)
-        if (interrupt_handlers[registers.interrupt_id].hooks)
-            interrupt_handlers[registers.interrupt_id].hooks[i](registers);
-
+    for (unsigned char i = 0; i < interrupt_callbacks[registers.interrupt_id].count; i++)
+        if (interrupt_callbacks[registers.interrupt_id].hooks)
+            interrupt_callbacks[registers.interrupt_id].hooks[i](registers);
     pic_end_master();
 }

@@ -4,6 +4,11 @@
 #include "port.h"
 #include "string.h"
 #include "bool.h"
+#include "pic.h"
+
+#define setup_keyboard() register_keyboard_hook(internal_keyboard_manager)
+
+#define register_keyboard_hook(hook) register_interrupt_hook(IRQ1, hook);
 
 bool ctrl_down, left_shift_down, right_shift_down;
 
@@ -16,11 +21,6 @@ struct key_info get_key_info()
 {
     const unsigned char scancode = input_port(0x60);
     return (scancode > 128 ? ((struct key_info){scancode - 128, 0}) : ((struct key_info){scancode, 1}));
-}
-
-inline void register_keyboard_hook(const hook_function hook)
-{
-    register_interrupt_hook(IRQ1, hook);
 }
 
 void internal_keyboard_manager()
@@ -347,9 +347,4 @@ void internal_keyboard_manager()
 				right_shift_down = false;
 				break;
 		}
-}
-
-inline void setup_keyboard()
-{
-    register_keyboard_hook(internal_keyboard_manager);
 }
