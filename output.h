@@ -95,18 +95,17 @@ void print(const char* message)
                         break;
                     default:
                         TEXT_POS+=8;
-                        break;
-                    if (TEXT_POS > LINE_POS + 159)
-                        if (LINE_POS == 3840) {
-                            for (unsigned short i = 0; i < 3838; i++)
-                                VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
-                            for (unsigned short i = 3840; i < 4000; i+=2) {
-                                VIDEO_MEMORY_ADDRESS[i] = 0;
-                                VIDEO_MEMORY_ADDRESS[i + 1] = 7;
-                            }
-                            TEXT_POS = 3840;
-                        } else
-                            TEXT_POS = LINE_POS+=160;
+                        if (TEXT_POS > LINE_POS + 159)
+                            if (LINE_POS == 3840) {
+                                for (unsigned short i = 0; i < 3838; i++)
+                                    VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                                for (unsigned short i = 3840; i < 4000; i+=2) {
+                                    VIDEO_MEMORY_ADDRESS[i] = 0;
+                                    VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                                }
+                                TEXT_POS = 3840;
+                            } else
+                                TEXT_POS = LINE_POS+=160;
                 }
                 *message++;
                 continue;
@@ -183,18 +182,17 @@ void print_colored(const char* message, const unsigned short color_code)
                         break;
                     default:
                         TEXT_POS+=8;
-                        break;
-                    if (TEXT_POS > LINE_POS + 159)
-                        if (LINE_POS == 3840) {
-                            for (unsigned short i = 0; i < 3838; i++)
-                                VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
-                            for (unsigned short i = 3840; i < 4000; i+=2) {
-                                VIDEO_MEMORY_ADDRESS[i] = 0;
-                                VIDEO_MEMORY_ADDRESS[i + 1] = 7;
-                            }
-                            TEXT_POS = 3840;
-                        } else
-                            TEXT_POS = LINE_POS+=160;
+                        if (TEXT_POS > LINE_POS + 159)
+                            if (LINE_POS == 3840) {
+                                for (unsigned short i = 0; i < 3838; i++)
+                                    VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                                for (unsigned short i = 3840; i < 4000; i+=2) {
+                                    VIDEO_MEMORY_ADDRESS[i] = 0;
+                                    VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                                }
+                                TEXT_POS = 3840;
+                            } else
+                                TEXT_POS = LINE_POS+=160;
                 }
                 *message++;
                 continue;
@@ -271,18 +269,17 @@ void printchar(const char message)
                     break;
                 default:
                     TEXT_POS+=8;
-                    break;
-                if (TEXT_POS > LINE_POS + 159)
-                    if (LINE_POS == 3840) {
-                        for (unsigned short i = 0; i < 3838; i++)
-                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
-                        for (unsigned short i = 3840; i < 4000; i+=2) {
-                            VIDEO_MEMORY_ADDRESS[i] = 0;
-                            VIDEO_MEMORY_ADDRESS[i + 1] = 7;
-                        }
-                        TEXT_POS = 3840;
-                    } else
-                        TEXT_POS = LINE_POS+=160;
+                    if (TEXT_POS > LINE_POS + 159)
+                        if (LINE_POS == 3840) {
+                            for (unsigned short i = 0; i < 3838; i++)
+                                VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                            for (unsigned short i = 3840; i < 4000; i+=2) {
+                                VIDEO_MEMORY_ADDRESS[i] = 0;
+                                VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                            }
+                            TEXT_POS = 3840;
+                        } else
+                            TEXT_POS = LINE_POS+=160;
             }
             break;
         default:
@@ -354,18 +351,17 @@ void printchar_colored(const char message, const unsigned short color_code)
                     break;
                 default:
                     TEXT_POS+=8;
-                    break;
-                if (TEXT_POS > LINE_POS + 159)
-                    if (LINE_POS == 3840) {
-                        for (unsigned short i = 0; i < 3838; i++)
-                            VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
-                        for (unsigned short i = 3840; i < 4000; i+=2) {
-                            VIDEO_MEMORY_ADDRESS[i] = 0;
-                            VIDEO_MEMORY_ADDRESS[i + 1] = 7;
-                        }
-                        TEXT_POS = 3840;
-                    } else
-                        TEXT_POS = LINE_POS+=160;
+                    if (TEXT_POS > LINE_POS + 159)
+                        if (LINE_POS == 3840) {
+                            for (unsigned short i = 0; i < 3838; i++)
+                                VIDEO_MEMORY_ADDRESS[i] = VIDEO_MEMORY_ADDRESS[i + 160];
+                            for (unsigned short i = 3840; i < 4000; i+=2) {
+                                VIDEO_MEMORY_ADDRESS[i] = 0;
+                                VIDEO_MEMORY_ADDRESS[i + 1] = 7;
+                            }
+                            TEXT_POS = 3840;
+                        } else
+                            TEXT_POS = LINE_POS+=160;
             }
             break;
         default:
