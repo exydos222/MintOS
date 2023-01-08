@@ -67,6 +67,7 @@ const char* string_push(char* string, const char source, const unsigned long pos
         string[i + 1] = string[i];
     string[pos] = source;
     string[length + 1] = '\0';
+    return string;
 }
 
 const char* copy_string(char* destination, const char* source) {
