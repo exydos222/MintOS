@@ -56,7 +56,6 @@ const void* reallocate(const void* address, const unsigned long old_size, const 
                 current_block->used+=new_size;
                 return address;
             } else {
-                return address;
                 for (unsigned int i = (unsigned int)address - (unsigned int)block->data_pointer + old_size; i < block->used; i++) {
                     ((char*)block->data_pointer)[i + new_size - old_size] = ((char*)block->data_pointer)[i];
                     ((char*)block->data_pointer)[i] = '\0';
