@@ -30,6 +30,8 @@ const void* allocate(const unsigned long size) {
         current_block = &new_block;
         const void* address = &((char*)current_block->data_pointer)[current_block->used - current_block->offset];
         current_block->used+=size;
+        for (unsigned int i = 0; i < current_block->used; i++)
+                    ((char*)current_block->data_pointer)[i + new_size - old_size] = ((char*)address)[i];
         return address;
     } else {
         const void* address = &((char*)current_block->data_pointer)[current_block->used - current_block->offset];
