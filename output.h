@@ -435,30 +435,6 @@ void clear_screen_whole_colored(const unsigned short color_code)
     TEXT_POS = 0;
 }
 
-void clear_screen_selection(const unsigned short x, const unsigned short y, const unsigned short length)
-{
-    const unsigned short pos = y * 80 + x;
-    for (unsigned short i = 0; i < length; i+=2) {
-        VIDEO_MEMORY_ADDRESS[i + pos] = 0;
-        VIDEO_MEMORY_ADDRESS[i + pos + 1] = 7;
-    }
-    TEXT_POS = 0;
-    printchar('>');
-    USER_POS = 1;
-}
-
-void clear_screen_selection_colored(const unsigned short color_code, const unsigned short x, const unsigned short y, const unsigned short length)
-{
-    const unsigned short pos = y * 80 + x;
-    for (unsigned short i = 0; i < length; i+=2) {
-        VIDEO_MEMORY_ADDRESS[i + pos] = 0;
-        VIDEO_MEMORY_ADDRESS[i + pos + 1] = color_code;
-    }
-    TEXT_POS = 0;
-    printchar('>');
-    USER_POS = 1;
-}
-
 void enable_terminal_cursor(bool insert_mode)
 {
 	output_port(0x3D4, 0x0A);
@@ -577,7 +553,7 @@ bool simulate_terminal_command(const char* command) {
         execute_file(command);
         return false;
     }
-    char path[MAX_INPUT];
+    char path[MAX_PATH + MAX_INPUT + 1];
     copy_string(path, current_directory);
     concatenate_char_to_string(path, '/');
     concatenate_string_to_string(path, command);
