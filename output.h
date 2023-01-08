@@ -569,9 +569,11 @@ bool simulate_terminal_command(const char* command) {
 }
 
 void simulate_terminal_newline(bool simulate_command) {
-    if (simulate_command == true)
+    if (simulate_command == true) {
         if (simulate_terminal_command(current_terminal_input) == false)
             return;
+    } else
+        printchar('\n');
     current_terminal_input[0] = '\0';
     CURSOR_OFFSET = 0;
     print(current_directory);
@@ -580,9 +582,11 @@ void simulate_terminal_newline(bool simulate_command) {
 }
 
 void simulate_terminal_newline_colored(bool simulate_command, const unsigned short color_code) {
-    if (simulate_command == true)
+    if (simulate_command == true) {
         if (simulate_terminal_command(current_terminal_input) == false)
             return;
+    } else
+        printchar('\n');
     current_terminal_input[0] = '\0';
     CURSOR_OFFSET = 0;
     print_colored(current_directory, color_code);
