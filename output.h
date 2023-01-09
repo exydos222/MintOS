@@ -6,6 +6,7 @@
 #include "filesystem.h"
 #include "bool.h"
 #include "math.h"
+#include "memory.h"
 
 #define TEXT_BLACK 0
 #define TEXT_BLUE 1
@@ -42,11 +43,9 @@
 
 #define VIDEO_MEMORY_ADDRESS ((char*)0xB8000)
 
-#define MAX_INPUT 256
-
 #define toggle_insert_mode() enable_terminal_cursor((insert_mode = !insert_mode))
 
-char current_terminal_input[MAX_INPUT];
+char* current_terminal_input;
 bool insert_mode;
 unsigned short TEXT_POS = 0, LINE_POS = 0, USER_POS = 0;
 short CURSOR_OFFSET = 0;
@@ -460,9 +459,9 @@ unsigned short get_cursor_position()
 }
 
 void simulate_terminal_keystroke(const char key) {
+    unsigned short length = string_length(current_terminal_input);
+    current_terminal_input = (char*)reallocate(current_terminal_input, length + 1, length + 2);
     const unsigned short pos = get_cursor_position() * 2;
-    if ((pos - USER_POS) / 2 == MAX_INPUT - 1)
-        return;
     if (insert_mode == true && CURSOR_OFFSET != 0) {
         current_terminal_input[(pos - USER_POS) / 2] = key;
         VIDEO_MEMORY_ADDRESS[pos] = key;
@@ -470,7 +469,7 @@ void simulate_terminal_keystroke(const char key) {
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[MAX_INPUT];
+        char* update = (char*)allocate(length + 2);
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
@@ -479,8 +478,6 @@ void simulate_terminal_keystroke(const char key) {
 
 void simulate_terminal_keystroke_colored(const char key, const unsigned short color_code) {
     const unsigned short pos = get_cursor_position() * 2;
-    if ((pos - USER_POS) / 2 == MAX_INPUT - 1)
-        return;
     if (insert_mode == true && CURSOR_OFFSET != 0) {
         current_terminal_input[(pos - USER_POS) / 2] = key;
         VIDEO_MEMORY_ADDRESS[pos] = key;
@@ -488,7 +485,7 @@ void simulate_terminal_keystroke_colored(const char key, const unsigned short co
     } else {
         string_push(current_terminal_input, key, (pos - USER_POS) / 2);
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[MAX_INPUT];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print_colored(update, color_code);
@@ -504,7 +501,7 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=CURSOR_OFFSET * 2;
-        char update[MAX_INPUT];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2);
         print(update);
@@ -515,7 +512,7 @@ void simulate_terminal_backspace() {
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 2] = 0;
         VIDEO_MEMORY_ADDRESS[TEXT_POS - 1] = 7;
         TEXT_POS-=(CURSOR_OFFSET + 1) * 2;
-        char update[MAX_INPUT];
+        char update[256];
         copy_string(update, current_terminal_input);
         substring_one(update, (pos - USER_POS) / 2 - 1);
         print(update);
@@ -553,7 +550,7 @@ bool simulate_terminal_command(const char* command) {
         execute_file(command);
         return false;
     }
-    char path[MAX_PATH + MAX_INPUT + 1];
+    char path[256];
     copy_string(path, current_directory);
     concatenate_char_to_string(path, '/');
     concatenate_string_to_string(path, command);

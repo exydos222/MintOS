@@ -57,16 +57,12 @@ struct registers
 typedef void (*hook_function)(struct registers);
 struct interrupt_handler {
     unsigned char count;
-    hook_function* hooks;
+    hook_function hooks[256];
 };
 struct interrupt_handler interrupt_callbacks[256];
 
 void register_interrupt_hook(const unsigned char interrupt, const hook_function hook)
 {
-    if (interrupt_callbacks[interrupt].count == 0)
-        interrupt_callbacks[interrupt].hooks = (hook_function*)allocate(sizeof(hook_function));
-    else
-        interrupt_callbacks[interrupt].hooks = (hook_function*)reallocate(interrupt_callbacks[interrupt].hooks, interrupt_callbacks[interrupt].count * sizeof(hook_function), (interrupt_callbacks[interrupt].count + 1) * sizeof(hook_function));
     interrupt_callbacks[interrupt].hooks[interrupt_callbacks[interrupt].count] = hook;
     interrupt_callbacks[interrupt].count++;
 }
