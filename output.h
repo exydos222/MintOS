@@ -46,7 +46,7 @@
 
 #define toggle_insert_mode() enable_terminal_cursor((insert_mode = !insert_mode))
 
-char* current_terminal_input;
+char current_terminal_input[256];
 bool insert_mode;
 unsigned short TEXT_POS = 0, LINE_POS = 0, USER_POS = 0;
 short CURSOR_OFFSET = 0;
