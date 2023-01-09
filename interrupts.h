@@ -46,6 +46,8 @@
 #define COMMUNICATION 29
 #define SECURITY 30
 
+#define MAX_HOOKS 128
+
 struct registers
 {
     unsigned int ds;
@@ -57,7 +59,7 @@ struct registers
 typedef void (*hook_function)(struct registers);
 struct interrupt_handler {
     unsigned char count;
-    hook_function hooks[256];
+    hook_function hooks[MAX_HOOKS];
 };
 struct interrupt_handler interrupt_callbacks[256];
 
