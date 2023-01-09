@@ -6,7 +6,6 @@
 
 void kernel_main()
 {
-	setup_allocator();
 	current_directory[0] = '\0';
 	setup_gdt();
 	setup_idt();
