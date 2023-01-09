@@ -1,6 +1,6 @@
 #pragma once
 
-#define MEMORY_BLOCK_SIZE 4096
+#define MEMORY_BLOCK_SIZE 512
 #define MEMORY_BLOCK_DATA_SIZE_TYPE unsigned short
 
 struct memory_block {
@@ -59,13 +59,14 @@ const void* reallocate(const void* address, const unsigned long old_size, const 
                 new_block.used = 0;
                 current_block->next = &new_block;
                 current_block = &new_block;
-                const void* address = &((char*)current_block->data_pointer)[current_block->used];
                 current_block->used+=new_size;
-                for (MEMORY_BLOCK_DATA_SIZE_TYPE i = 0; i < current_block->used; i++)
-                    ((char*)current_block->data_pointer)[i + new_size - old_size] = ((char*)address)[i];
-                return address;
+                for (MEMORY_BLOCK_DATA_SIZE_TYPE i = 0; i < old_size; i++) {
+                    ((char*)current_block->data_pointer)[i] = ((char*)address)[i];
+                    ((char*)address)[i] = '\0';
+                }
+                return current_block->data_pointer;
             } else {
-                const MEMORY_BLOCK_DATA_SIZE_TYPE amount = block->used - ((unsigned int)address - (unsigned int)block->data_pointer);
+                const MEMORY_BLOCK_DATA_SIZE_TYPE amount = block->used - ((unsigned int)address - (unsigned int)block->data_pointer + old_size);
                 for (MEMORY_BLOCK_DATA_SIZE_TYPE i = 0; i < amount; i++)
                     ((char*)address)[i + new_size] = ((char*)address)[i + old_size];
                 for (MEMORY_BLOCK_DATA_SIZE_TYPE i = 0; i < new_size - old_size; i++)
