@@ -460,8 +460,6 @@ unsigned short get_cursor_position()
 }
 
 void simulate_terminal_keystroke(const char key) {
-    unsigned short length = string_length(current_terminal_input);
-    current_terminal_input = (char*)reallocate(current_terminal_input, length + 1, length + 2);
     const unsigned short pos = get_cursor_position() * 2;
     if ((pos - USER_POS) / 2 == MAX_INPUT - 1)
         return;
