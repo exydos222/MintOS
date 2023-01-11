@@ -2,9 +2,7 @@
 
 #include "bool.h"
 
-#define MAX_PATH 256
-
-char current_directory[MAX_PATH];
+char* current_directory;
 
 bool file_exists(const char* path) {
     return false;
