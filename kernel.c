@@ -7,6 +7,7 @@
 
 void kernel_main()
 {
+	clear_screen_whole();
 	setup_allocator();
 	setup_keyboard();
 	current_directory = (char*)allocate(1);
@@ -15,7 +16,6 @@ void kernel_main()
 	setup_idt();
 	remap_pic();
 	
-	clear_screen_whole();
 	print_colored("MintOS Kernel Terminal\n\n>", TEXT_LIGHT_GREEN);
 	USER_POS = TEXT_POS;
 }

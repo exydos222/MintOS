@@ -67,6 +67,8 @@ void register_interrupt_hook(const unsigned char interrupt, const hook_function 
         interrupt_callbacks[interrupt].hooks = (hook_function*)allocate(sizeof(hook_function));
     else
         interrupt_callbacks[interrupt].hooks = (hook_function*)reallocate(interrupt_callbacks[interrupt].hooks, sizeof(hook_function) * interrupt_callbacks[interrupt].count, sizeof(hook_function) * (interrupt_callbacks[interrupt].count + 1));
+    current_directory+=sizeof(hook_function);
+    current_terminal_input+=sizeof(hook_function);
     interrupt_callbacks[interrupt].hooks[interrupt_callbacks[interrupt].count] = hook;
     interrupt_callbacks[interrupt].count++;
 }
