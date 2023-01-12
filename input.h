@@ -6,7 +6,7 @@
 #include "bool.h"
 #include "pic.h"
 
-#define setup_keyboard() register_keyboard_hook(internal_keyboard_manager); current_directory-=sizeof(hook_function); current_terminal_input-=sizeof(hook_function)
+#define setup_keyboard() register_keyboard_hook(internal_keyboard_manager)
 
 #define register_keyboard_hook(hook) register_interrupt_hook(IRQ1, hook);
 
