@@ -2,6 +2,7 @@
 
 #include "pic.h"
 #include "errors.h"
+#include "allocator.h"
 
 #define IRQ0 32
 #define IRQ1 33

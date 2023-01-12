@@ -3,7 +3,7 @@
 #include "pic.h"
 #include "gdt.h"
 #include "idt.h"
-#include "memory.h"
+#include "allocator.h"
 
 void kernel_main()
 {

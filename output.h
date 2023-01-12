@@ -7,7 +7,7 @@
 #include "bool.h"
 #include "math.h"
 #include "output.h"
-#include "memory.h"
+#include "allocator.h"
 
 #define OUTPUT_DEFINITIONS
 #define TEXT_BLACK 0
