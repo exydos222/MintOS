@@ -53,9 +53,11 @@ void deallocate(const void* address, const MEMORY_BLOCK_DATA_TYPE size) {
 const void* reallocate(const void* address, const MEMORY_BLOCK_DATA_TYPE old_size, const MEMORY_BLOCK_DATA_TYPE new_size) {
     if (new_size > MEMORY_BLOCK_SIZE)
         return 0;
+    else if (old_size == new_size)
+        return address;
     for (struct memory_block* memory_block = first_memory_block; memory_block; memory_block = memory_block->next)
         if ((unsigned int)address >= (unsigned int)memory_block->data_pointer && (unsigned int)address <= (unsigned int)memory_block->data_pointer + MEMORY_BLOCK_SIZE)
-            if (old_size >= new_size) {
+            if (old_size > new_size) {
                 for (MEMORY_BLOCK_DATA_TYPE i = (unsigned int)address - (unsigned int)memory_block->data_pointer + old_size; i < memory_block->used; i++)
                     ((char*)memory_block->data_pointer)[i - old_size + new_size] = ((char*)memory_block->data_pointer)[i];
                 for (MEMORY_BLOCK_DATA_TYPE i = 0; i < old_size - new_size; i++)
